@@ -12,7 +12,7 @@ class bookRepositoryTest {
     @Test
     public void saveTest() throws SQLException {
         book book = new book();
-        book.setId(3);
+        book.setId(1);
         book.setName("1");
         System.out.println(book.getId());
         System.out.println(bookRepository.save(book).getName());
@@ -22,5 +22,8 @@ class bookRepositoryTest {
     public void findTest() throws SQLException{
         System.out.println(bookRepository.findByName("1"));
     }
-
+    @Test
+    public void deleteTest() throws SQLException{
+        bookRepository.delete(2);
+    }
 }

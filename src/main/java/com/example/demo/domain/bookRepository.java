@@ -1,7 +1,6 @@
 package com.example.demo.domain;
 
 import com.example.demo.transactional.TransactionManager;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
@@ -38,6 +37,12 @@ public class bookRepository{
         } else {
             throw new NoSuchElementException("Member not founded NAME = " + name);
         }
-
+    }
+    public void delete(int bookId) throws SQLException {
+        String sql = "delete from book where id = ?";
+        Connection con = DataSourceUtils.getConnection(TransactionManager.getDataSource());
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        pstmt.setInt(1, bookId);
+        pstmt.executeUpdate();
     }
 }

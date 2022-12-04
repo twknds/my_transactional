@@ -9,6 +9,7 @@ import javax.persistence.*;
 @Setter
 @Getter
 @ToString
+@RequiredArgsConstructor
 public class book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
