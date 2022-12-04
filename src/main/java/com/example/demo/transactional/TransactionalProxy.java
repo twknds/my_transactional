@@ -2,20 +2,23 @@ package com.example.demo.transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.transaction.PlatformTransactionManager;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 @RequiredArgsConstructor
 @Slf4j
 public class TransactionalProxy implements TransactionalInterface {
 
-
+    //private final PlatformTransactionManager platformTransactionManager;
     TransactionalInterface transactionalInterface = new TransactionalImpl();
     TransactionManager transactionManager = new TransactionManager();
 
     @Override
     public void logic() throws SQLException {
         // 호출전 처리기능 ex) commit 수동
-        Connection conn = transactionManager.getConnection();
+        Connection conn = DataSourceUtils.getConnection(TransactionManager.getDataSource());
         try {
             conn.setAutoCommit(false);
             transactionalInterface.logic();

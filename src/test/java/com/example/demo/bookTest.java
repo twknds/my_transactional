@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +31,7 @@ public class bookTest {
 
     Logger logger = LoggerFactory.getLogger(bookTest.class);
     @Test
-    public void addBook(){
+    public void addBook() throws SQLException {
         List<book> book = new ArrayList<>();
         bookstore bookstroe = new bookstore();
         bookstroe.setName("책방");
