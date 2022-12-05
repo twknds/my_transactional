@@ -2,9 +2,9 @@
 
 ### transaction aop 처리를 위한 proxy객체 구현
 
-실제 @transactional 호출시 AOP proxy객체가 호출되어 트랜잭션 처리가 되는것을 감안해서 트랜잭션 proxy객체를 구현했고 , command pattern을 적용해 logic메서드 한개를 통해서 트랜잭션이 작동될수 있게 했다.
+- 실제 @transactional 호출시 AOP proxy객체가 호출되어 트랜잭션 처리가 되는것을 감안해서 트랜잭션 proxy객체를 구현했고 , command pattern을 적용해 logic메서드 한개를 통해서 트랜잭션이 작동될수 있게 했다.
 
-트랜잭션 프록시 객체의 구현 코드
+- 트랜잭션 프록시 객체의 구현 코드
 ```java
 
 public void logic(){
