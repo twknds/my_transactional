@@ -1,7 +1,11 @@
 package com.example.demo.transactional;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;
@@ -10,9 +14,14 @@ import java.sql.SQLException;
 @Slf4j
 public abstract class TransactionalProxy implements TransactionalInterface{
     public String transactionMethodName;
+    PlatformTransactionManager platformTransactionManager;
+    TransactionStatus status;
+
     Connection conn;
     {
         try {
+            platformTransactionManager = new DataSourceTransactionManager(TransactionManager.getDataSource());
+            status =platformTransactionManager.getTransaction(new DefaultTransactionAttribute());
             conn = DataSourceUtils.getConnection(TransactionManager.getDataSource());
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -29,26 +38,22 @@ public abstract class TransactionalProxy implements TransactionalInterface{
         }
     }
     private void after(){
-        try {
-            conn.commit();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        release(conn);
+        platformTransactionManager.commit(status);
     }
     @Override
     public void logic(){
         before();
         try {
             runLogic();
+            after();
         }catch (Exception e){
-            try {
-                conn.rollback();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
+            platformTransactionManager.rollback(status);
         }
-        after();
+    }
+    @Override
+    public void noLogic() throws SQLException{
+        conn.setAutoCommit(true);
+        runLogic();
     }
     public void runLogic(){
         try{
@@ -56,16 +61,6 @@ public abstract class TransactionalProxy implements TransactionalInterface{
             method.invoke(this,null);
         } catch (Exception e) {
             throw new RuntimeException();
-        }
-    }
-    private void release(Connection conn){
-        if (conn != null) {
-            try {
-                conn.setAutoCommit(true);//해당 커넥션을 바로 close()할 경우 setAutoCommit-false인채로 Pool로 돌아감
-                conn.close();
-            } catch (Exception e) {
-                log.error("error", e);
-            }
         }
     }
 }
