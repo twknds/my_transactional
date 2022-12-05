@@ -10,12 +10,6 @@ public class UseService extends TransactionalProxy{
     public UseService(String transactionMethodName) {
         super(transactionMethodName);
     }
-    public void addBook() throws SQLException{
-        book book = new book();
-        book.setId(2);
-        book.setName("2");
-        bookRepository.save(book);
-    }
     public void noError() throws SQLException {
         book book1 = new book();
         book book2 = new book();

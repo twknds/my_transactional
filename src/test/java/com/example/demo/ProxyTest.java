@@ -1,13 +1,8 @@
 package com.example.demo;
 
 import com.example.demo.domain.bookRepository;
-import com.example.demo.transactional.TransactionManager;
 import com.example.demo.transactional.UseService;
 import org.junit.jupiter.api.Test;
-import org.springframework.dao.support.DataAccessUtils;
-import org.springframework.jdbc.datasource.DataSourceUtils;
-
-import java.sql.Connection;
 import java.sql.SQLException;
 
 public class ProxyTest{

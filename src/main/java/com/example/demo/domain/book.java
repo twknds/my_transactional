@@ -1,7 +1,6 @@
 package com.example.demo.domain;
 
 import lombok.*;
-import org.springframework.context.annotation.Primary;
 
 import javax.persistence.*;
 

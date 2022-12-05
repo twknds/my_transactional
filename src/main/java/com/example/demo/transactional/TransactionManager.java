@@ -1,6 +1,5 @@
 package com.example.demo.transactional;
 
-import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
