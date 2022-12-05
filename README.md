@@ -67,7 +67,7 @@ public class UseService extends TransactionalProxy{
 
 ## 트랜잭션 테스트 코드 해설
 
-에러를 발생시키는 코드(id값이 동일해서 2번째 save호출시 에러가 발생한다)
+### 에러를 발생시키는 코드(id값이 동일해서 2번째 save호출시 에러가 발생한다)
 ```java
 
 public void getError() throws SQLException {
@@ -84,7 +84,7 @@ public void getError() throws SQLException {
 ```
 
 
-테스트 코드
+### 테스트 코드
 ```java
 
 // Transaction처리를 못받게 비즈니스로직만을 실행시킨다.
@@ -97,10 +97,10 @@ public void getError() throws SQLException {
 
 ![img.png](img.png)
 
-transaction처리 없이 트랜잭션 중 에러가 발생시 한개의 작업은 이미 처리가 되어서 만약 결제 시스템의 경우라면 한쪽의 돈을 빼서 한쪽에 넣는 경우 중간에 에러발생시 모든 트랜잭션내용을 rollback해야 하지만 트랜잭션 처리가 되지않아서 롤백이 되지않고 한개만 저장된 모습이다.
+- transaction처리 없이 트랜잭션 중 에러가 발생시 한개의 작업은 이미 처리가 되어서 만약 결제 시스템의 경우라면 한쪽의 돈을 빼서 한쪽에 넣는 경우 중간에 에러발생시 모든 트랜잭션내용을 rollback해야 하지만 트랜잭션 처리가 되지않아서 롤백이 되지않고 한개만 저장된 모습이다.
 
 
-트랜잭션을 적용한 테스트 코드
+### 트랜잭션을 적용한 테스트 코드
 ```java
 
 // before, after를 다받아서 transaction처리를 받게한다.
@@ -113,6 +113,6 @@ transaction처리 없이 트랜잭션 중 에러가 발생시 한개의 작업�
 
 ![img_1.png](img_1.png)
 ![img_2.png](img_2.png)
-트랜잭션이 적용된 코드의 경우 중간에 에러가 발생하니 롤백이 되는 모습이다.
+- 트랜잭션이 적용된 코드의 경우 중간에 에러가 발생하니 롤백이 되는 모습이다.
 
 
