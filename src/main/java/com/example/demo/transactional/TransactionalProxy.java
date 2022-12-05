@@ -1,33 +1,61 @@
 package com.example.demo.transactional;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.datasource.DataSourceUtils;
-import org.springframework.transaction.PlatformTransactionManager;
 
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
-@RequiredArgsConstructor
+
 @Slf4j
-public class TransactionalProxy implements TransactionalInterface {
-
-    //private final PlatformTransactionManager platformTransactionManager;
-    TransactionalInterface transactionalInterface = new TransactionalImpl();
-    TransactionManager transactionManager = new TransactionManager();
-
-    @Override
-    public void logic() throws SQLException {
-        // 호출전 처리기능 ex) commit 수동
-        Connection conn = DataSourceUtils.getConnection(TransactionManager.getDataSource());
+public abstract class TransactionalProxy implements TransactionalInterface{
+    public String transactionMethodName;
+    Connection conn;
+    {
+        try {
+            conn = DataSourceUtils.getConnection(TransactionManager.getDataSource());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+    public TransactionalProxy(String transactionMethodName){
+        this.transactionMethodName = transactionMethodName;
+    }
+    private void before(){
         try {
             conn.setAutoCommit(false);
-            transactionalInterface.logic();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+    private void after(){
+        try {
             conn.commit();
-        }catch (SQLException e){
-            conn.rollback();
-            throw new IllegalStateException(e);
-        }finally{
-            release(conn);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        release(conn);
+    }
+    @Override
+    public void logic(){
+        before();
+        try {
+            runLogic();
+        }catch (Exception e){
+            try {
+                conn.rollback();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        after();
+    }
+    public void runLogic(){
+        try{
+            Method method = this.getClass().getMethod(transactionMethodName,null);
+            method.invoke(this,null);
+        } catch (Exception e) {
+            throw new RuntimeException();
         }
     }
     private void release(Connection conn){

@@ -16,12 +16,4 @@ public class book {
     private Integer id;
 
     private String name;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    private bookstore bookstore;
-
-    public book setName(String name) {
-        this.name = name;
-        return this;
-    }
 }
